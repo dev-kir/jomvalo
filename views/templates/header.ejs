@@ -1,0 +1,41 @@
+<div class="px-0 py-2 sm:px-4 sm:py-4">
+    <nav class="bg-white text-zinc-900">
+        <div class="flex justify-between items-center px-2 py-3">
+            <!-- Logo or Brand -->
+            <div class="flex-shrink-0">
+                <a href="https://jomvalo.amirmuz.com" class="font-bold text-xl">🎮 . jomvalooo</a>
+            </div>
+            <!-- Hamburger icon for mobile -->
+            <div class="block sm:hidden">
+                <button id="mobile-menu-toggle" class="focus:outline-none">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Navigation Links -->
+            <ul class="hidden sm:flex sm:gap-6 sm:items-center">
+                <li><a href="https://github.com/dev-kir/jomvalo.git" target="_blank" class="">💻code</a></li>
+                <li><a href="https://amirmuz.com" target="_blank" class="">🧚🏼‍♂️about me</a></li>
+            </ul>
+        </div>
+        <hr>
+        <!-- Dropdown Menu (Hidden by Default) -->
+        <div id="mobile-menu" class="sm:hidden hidden">
+            <ul class="px-2 py-3">
+                <li><a href="https://github.com/dev-kir/jomvalo.git" target="_blank" class="block py-2">💻code</a></li>
+                <li><a href="https://amirmuz.com" target="_blank" class="block py-2">🧚🏼‍♂️about me</a></li>
+                <hr>
+            </ul>
+        </div>
+    </nav>
+    
+    <script>
+        // Toggle mobile menu visibility
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+    
+</div>

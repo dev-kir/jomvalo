@@ -1,0 +1,147 @@
+<%- include('templates/html_start'); %>
+    <%- include('templates/head'); %> 
+    <%- include('templates/body_start'); %>
+        <%- include('templates/header'); %>
+
+        <div name="main" class="px-4 py-4 sm:px-4 sm:py-4 text-zinc-900 mx-auto font-light text-sm sm:text-base">            
+            <div class="flex justify-center items-center py-24">
+                <img id="gifImage" class="max-w-52" alt="Animated sad peach GIF">
+            </div>
+            <div>
+                <h1>Click the button below to invite k1r🌚</h1>
+            </div>
+            <div class="flex justify-center py-8">
+                <button id="sendMessageButton" class="text-slate-700 hover:text-white border border-slate-700 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Let's 🎮</button>
+            </div>
+        </div>
+
+        <!-- Main modal -->
+        <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow">
+                    <div class="flex items-center justify-between p-4 border-b rounded-t">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Enter your username
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <form id="username-form" action="/set-username" method="POST" class="space-y-4">
+                            <div>
+                                <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5" placeholder="Your valorant's username" required />
+                            </div>
+                            <div class="cf-turnstile" data-sitekey="<%= process.env.CLOUDFLARE_TURNSTILE_SITE_KEY %>"></div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="w-full text-white bg-slate-700 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('templates/footer'); %>
+    <%- include('templates/body_end'); %>
+    <%- include('templates/script'); %>
+    <script>
+        document.getElementById("username-form").addEventListener("submit", function(event) {
+            const usernameInput = document.getElementById("username");
+            const usernameValue = usernameInput.value.trim();
+
+            if (usernameValue === "") {
+                // Prevent form submission
+                event.preventDefault();
+                // Display error message
+                const errorMessage = document.getElementById("username-error-message");
+                errorMessage.innerText = "Username is required.";
+            }
+        });
+
+        const invite_gif = [
+            "../assets/gif/invite/i-1.gif",
+            "../assets/gif/invite/i-2.gif",
+            "../assets/gif/invite/i-3.gif",
+            "../assets/gif/invite/i-4.gif",
+            "../assets/gif/invite/i-5.gif",
+            "../assets/gif/invite/i-6.gif",
+            "../assets/gif/invite/i-7.gif",
+            "../assets/gif/invite/i-8.gif",
+            "../assets/gif/invite/i-9.gif",
+            "../assets/gif/invite/i-10.gif",
+            "../assets/gif/invite/i-11.gif",
+            "../assets/gif/invite/i-12.gif",
+            "../assets/gif/invite/i-13.gif",
+            "../assets/gif/invite/i-14.gif",
+        ];
+
+        const accept_gif = [
+            "../assets/gif/accept/a-1.gif",
+            "../assets/gif/accept/a-2.gif",
+            "../assets/gif/accept/a-3.gif",
+            "../assets/gif/accept/a-4.gif",
+            "../assets/gif/accept/a-5.gif",
+            "../assets/gif/accept/a-6.gif",
+            "../assets/gif/accept/a-7.gif",
+        ];
+
+        document.getElementById("sendMessageButton").addEventListener("click", async () => {
+            try {
+                const randomIndex = Math.floor(Math.random() * accept_gif.length);
+                const randomGif = accept_gif[randomIndex];
+                const username = "<%= username %>";
+                const message = `${username} just invited you to valorant 🥴`;
+
+                const location = randomGif;
+
+                const response = await fetch("/tete", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "CSRF-Token": "<%= csrfToken %>"
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+            
+                if (response.ok) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/letsgo';
+
+                    const locationInput = document.createElement('input');
+                    locationInput.type = 'hidden';
+                    locationInput.name = 'location';
+                    locationInput.value = location;
+
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_csrf';
+                    csrfInput.value = "<%= csrfToken %>";
+
+                    form.appendChild(locationInput);
+                    form.appendChild(csrfInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                } else {
+                    throw new Error("Failed to send message to Telegram");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });       
+
+        function displayRandomGif() {
+            const randomIndex = Math.floor(Math.random() * invite_gif.length);
+            const randomGif = invite_gif[randomIndex];
+            document.getElementById("gifImage").src = randomGif;
+        }
+
+        window.addEventListener("load", () => {
+            displayRandomGif();
+            const username = "<%= username %>";
+            if (!username) {
+                const modal = document.getElementById('authentication-modal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        });
+    </script>
+<%- include('templates/html_end'); %>
