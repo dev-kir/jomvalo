@@ -8,10 +8,11 @@
                 <img id="gifImage" class="max-w-52" alt="GIF">
             </div>
             <div>
-                <h1>Click the button below to invite k1r🌚</h1>
+                <h1>Will u play valorant with me ? 🥺</h1>
             </div>
             <div class="flex justify-center py-8">
-                <button id="sendMessageButton" class="text-slate-700 hover:text-white border border-slate-700 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Let's 🎮</button>
+                <button id="sendMessageButton" class="text-slate-700 hover:text-white border border-slate-700 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Yes</button>
+                <button id="rejectButton" class="text-white bg-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" onclick="refreshPage()">No</button>
             </div>
         </div>
 
@@ -127,6 +128,60 @@
                 console.error("Error:", error);
             }
         });       
+
+        // document.getElementById("rejectButton").addEventListener("mousemove", (event) => {
+        //     const button = document.getElementById("rejectButton");
+        //     const buttonRect = button.getBoundingClientRect();
+        //     const containerRect = button.parentElement.getBoundingClientRect();
+            
+        //     const threshold = 50; // Distance in pixels to detect the cursor near the button
+        //     const minMoveDistance = 5; // Minimum distance to move the button
+        //     const maxMoveDistance = 15; // Maximum distance to move the button
+
+        //     if (Math.abs(event.clientX - buttonRect.left) < threshold || Math.abs(event.clientX - buttonRect.right) < threshold ||
+        //         Math.abs(event.clientY - buttonRect.top) < threshold || Math.abs(event.clientY - buttonRect.bottom) < threshold) {
+
+        //         let newLeft = buttonRect.left + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * (maxMoveDistance - minMoveDistance) + minMoveDistance);
+        //         let newTop = buttonRect.top + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * (maxMoveDistance - minMoveDistance) + minMoveDistance);
+
+        //         // Ensure the button stays within the container bounds
+        //         newLeft = Math.max(containerRect.left, Math.min(newLeft, containerRect.right - buttonRect.width));
+        //         newTop = Math.max(containerRect.top, Math.min(newTop, containerRect.bottom - buttonRect.height));
+
+        //         button.style.position = "absolute";
+        //         button.style.left = `${newLeft - containerRect.left}px`;
+        //         button.style.top = `${newTop - containerRect.top}px`;
+        //     }
+        // });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rejectButton = document.getElementById('rejectButton');
+            const originalLeft = rejectButton.offsetLeft;
+            const originalTop = rejectButton.offsetTop;
+            const moveRange = 180; // Maximum distance the button can move
+            const minMove = 80; // Minimum distance the button must move
+
+            function getNewPosition(original, minMove, maxMove) {
+                let newPos;
+                do {
+                    newPos = original + Math.random() * maxMove - maxMove / 2;
+                } while (Math.abs(newPos - original) < minMove);
+                return newPos;
+            }
+
+            rejectButton.addEventListener('mouseover', () => {
+                const newX = getNewPosition(originalLeft, minMove, moveRange);
+                const newY = getNewPosition(originalTop, minMove, moveRange);
+
+                rejectButton.style.position = 'absolute';
+                rejectButton.style.left = `${newX}px`;
+                rejectButton.style.top = `${newY}px`;
+            });
+        });
+
+        function refreshPage() {
+            location.reload();
+        }
 
         function displayRandomGif() {
             const randomIndex = Math.floor(Math.random() * invite_gif.length);
