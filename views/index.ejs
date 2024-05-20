@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <!-- Main modal -->
+        <!-- main modal -->
         <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full h-full bg-black bg-opacity-50">
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow">
@@ -48,9 +48,7 @@
             const usernameValue = usernameInput.value.trim();
 
             if (usernameValue === "") {
-                // Prevent form submission
                 event.preventDefault();
-                // Display error message
                 const errorMessage = document.getElementById("username-error-message");
                 errorMessage.innerText = "Username is required.";
             }
@@ -129,53 +127,38 @@
             }
         });       
 
-        // document.getElementById("rejectButton").addEventListener("mousemove", (event) => {
-        //     const button = document.getElementById("rejectButton");
-        //     const buttonRect = button.getBoundingClientRect();
-        //     const containerRect = button.parentElement.getBoundingClientRect();
-            
-        //     const threshold = 50; // Distance in pixels to detect the cursor near the button
-        //     const minMoveDistance = 5; // Minimum distance to move the button
-        //     const maxMoveDistance = 15; // Maximum distance to move the button
-
-        //     if (Math.abs(event.clientX - buttonRect.left) < threshold || Math.abs(event.clientX - buttonRect.right) < threshold ||
-        //         Math.abs(event.clientY - buttonRect.top) < threshold || Math.abs(event.clientY - buttonRect.bottom) < threshold) {
-
-        //         let newLeft = buttonRect.left + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * (maxMoveDistance - minMoveDistance) + minMoveDistance);
-        //         let newTop = buttonRect.top + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * (maxMoveDistance - minMoveDistance) + minMoveDistance);
-
-        //         // Ensure the button stays within the container bounds
-        //         newLeft = Math.max(containerRect.left, Math.min(newLeft, containerRect.right - buttonRect.width));
-        //         newTop = Math.max(containerRect.top, Math.min(newTop, containerRect.bottom - buttonRect.height));
-
-        //         button.style.position = "absolute";
-        //         button.style.left = `${newLeft - containerRect.left}px`;
-        //         button.style.top = `${newTop - containerRect.top}px`;
-        //     }
-        // });
-
         document.addEventListener('DOMContentLoaded', (event) => {
             const rejectButton = document.getElementById('rejectButton');
-            const originalLeft = rejectButton.offsetLeft;
-            const originalTop = rejectButton.offsetTop;
-            const moveRange = 180; // Maximum distance the button can move
-            const minMove = 80; // Minimum distance the button must move
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const moveRange = 300;
+            const minMove = 50;
 
-            function getNewPosition(original, minMove, maxMove) {
+            let prevX = centerX;
+            let prevY = centerY;
+
+            function getNewPosition(original, prev, minMove, maxMove) {
                 let newPos;
                 do {
                     newPos = original + Math.random() * maxMove - maxMove / 2;
-                } while (Math.abs(newPos - original) < minMove);
+                } while (Math.abs(newPos - prev) < minMove || newPos < original - maxMove / 2 || newPos > original + maxMove / 2);
                 return newPos;
             }
 
             rejectButton.addEventListener('mouseover', () => {
-                const newX = getNewPosition(originalLeft, minMove, moveRange);
-                const newY = getNewPosition(originalTop, minMove, moveRange);
+                const newX = getNewPosition(centerX, prevX, minMove, moveRange);
+                const newY = getNewPosition(centerY, prevY, minMove, moveRange);
+
+                console.log("newX: " + newX);
+                console.log("newY: " + newY);
+                console.log("---------------");
 
                 rejectButton.style.position = 'absolute';
-                rejectButton.style.left = `${newX}px`;
-                rejectButton.style.top = `${newY}px`;
+                rejectButton.style.left = `${newX - rejectButton.clientWidth / 2}px`;
+                rejectButton.style.top = `${newY - rejectButton.clientHeight / 2}px`;
+
+                prevX = newX;
+                prevY = newY;
             });
         });
 
